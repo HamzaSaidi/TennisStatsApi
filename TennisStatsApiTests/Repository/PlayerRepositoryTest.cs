@@ -50,7 +50,7 @@ public class PlayerRepositoryTest
         // Arrange
         _fileSystemHelperMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(false); 
         // Act
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetAll());
+                await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetAll());
 
     }
 
@@ -79,7 +79,7 @@ public class PlayerRepositoryTest
         _fileSystemHelperMock.Setup(x => x.ReadAllText(It.IsAny<string>())).Returns(jsonData);
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetAll());
+        await Assert.ThrowsAsync<NotFoundException>(() => _repository.GetById(7));
     }
 
     [Fact]
