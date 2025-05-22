@@ -36,10 +36,14 @@ stages:
             command: 'build'
             projects: '$(solution)'
             arguments: '--configuration $(buildConfiguration)'
-        - task: VSTest@2
+          
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Unit Tests'
           inputs:
-            platform: '$(buildPlatform)'
-            configuration: '$(buildConfiguration)'
+              command: 'test'
+              projects: '**/*Tests.csproj'  
+              arguments: '--configuration Release --no-build'
+      
         - task: PublishBuildArtifacts@1
           inputs:
             PathtoPublish: '$(Build.ArtifactStagingDirectory)'
