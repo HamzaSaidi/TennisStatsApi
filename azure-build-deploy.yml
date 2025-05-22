@@ -28,13 +28,14 @@ stages:
           inputs:
             restoreSolution: '$(solution)'
 
-        - task: VSBuild@1
-          inputs:
-            solution: '$(solution)'
-            msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-            platform: '$(buildPlatform)'
-            configuration: '$(buildConfiguration)'
 
+
+        - task: DotNetCoreCLI@2
+          inputs:
+            azureSubscription: 'Azure subscription 1(359b6ed0-9a63-4401-8bb6-19c83cf226ca)'
+            command: 'build'
+            projects: '$(solution)'
+            arguments: '--configuration $(buildConfiguration)'
         - task: VSTest@2
           inputs:
             platform: '$(buildPlatform)'
