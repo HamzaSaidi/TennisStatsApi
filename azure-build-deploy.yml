@@ -15,55 +15,39 @@ variables:
   project:  '**/*Api.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-stages:
-  - stage: Build
-    displayName: 'build stage'
-    jobs:
-      - job:  BuildJob
-        displayName: 'Build job'
 
-        steps:
-        - task: NuGetToolInstaller@1
+steps:
+- task: NuGetToolInstaller@1
 
-        - task: NuGetCommand@2
-          inputs:
-            restoreSolution: '$(solution)'
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+- task: DotNetCoreCLI@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(359b6ed0-9a63-4401-8bb6-19c83cf226ca)'
+    command: 'build'
+    projects: '$(solution)'
+    arguments: '--configuration $(buildConfiguration)'
 
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tes  ts'
+  inputs:
+      command: 'test'
+      projects: '**/*Tests.csproj'  
+      arguments: '--configuration Release --no-build'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish .NET Project'
+  inputs:
+    command: 'publish'
+    projects: '$(project)'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
+    zipAfterPublish: true
 
-
-        - task: DotNetCoreCLI@2
-          inputs:
-            azureSubscription: 'Azure subscription 1(359b6ed0-9a63-4401-8bb6-19c83cf226ca)'
-            command: 'build'
-            projects: '$(solution)'
-            arguments: '--configuration $(buildConfiguration)'
-          
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Unit Tests'
-          inputs:
-              command: 'test'
-              projects: '**/*Tests.csproj'  
-              arguments: '--configuration Release --no-build'
-        - task: DotNetCoreCLI@2
-          displayName: 'Publish .NET Project'
-          inputs:
-            command: 'publish'
-            projects: '$(project)'
-            arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
-            zipAfterPublish: true
-  - stage: Deploy
-    dependsOn:  Build
-    displayName: 'Deploy stage'
-    jobs:
-      - job:  Deploy
-        displayName: 'deploy job'
-        steps: 
-
-          - task: AzureRmWebAppDeployment@5
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure subscription 1(359b6ed0-9a63-4401-8bb6-19c83cf226ca)'
-              appType: 'webApp'
-              WebAppName: 'TennisStatsApi'
-              packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
+- task: AzureRmWebAppDeployment@5
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(359b6ed0-9a63-4401-8bb6-19c83cf226ca)'
+    appType: 'webApp'
+    WebAppName: 'TennisStatsApi'
+    packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
 
