@@ -52,6 +52,7 @@ stages:
             arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
             zipAfterPublish: true
   - stage: Deploy
+    dependsOn:  Build
     displayName: 'Deploy stage'
     jobs:
       - job:  Deploy
