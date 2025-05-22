@@ -28,7 +28,7 @@ public class PlayerRepositoryTest
     }
 
     [Fact]
-    public async Task GetAllPlayers_WhenFileExists_ReturnsPlayersOrderedByRankDesc()
+    public async Task GetAllPlayers_WhenFileExists_ReturnsAllPlayers()
     {
         // Arrange
         var jsonData = JsonSerializer.Serialize(_testPlayers);
@@ -36,13 +36,11 @@ public class PlayerRepositoryTest
         _fileSystemHelperMock.Setup(x => x.ReadAllText(It.IsAny<string>())).Returns(jsonData);
 
         // Act
-        var result = await _repository.GetAllOrderedByRank();
+        var result = await _repository.GetAll();
 
         // Assert
         Assert.Equal(3, result.Count);
-        Assert.Equal(2, result[0].Id); // Highest rank (200) should be first
-        Assert.Equal(1, result[1].Id); // Next highest (100)
-        Assert.Equal(3, result[2].Id); // Lowest rank (50)
+        
     }
 
     [Fact]
@@ -51,7 +49,7 @@ public class PlayerRepositoryTest
         // Arrange
         _fileSystemHelperMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(false); 
         // Act
-        var result = await _repository.GetAllOrderedByRank();
+        var result = await _repository.GetAll();
 
         // Assert
         Assert.Empty(result);
@@ -93,7 +91,7 @@ public class PlayerRepositoryTest
         _fileSystemHelperMock.Setup(x => x.ReadAllText(It.IsAny<string>())).Returns("invalid json");
 
         // Act
-        var result = await _repository.GetAllOrderedByRank();
+        var result = await _repository.GetAll();
 
         // Assert
         Assert.Empty(result);
@@ -108,8 +106,8 @@ public class PlayerRepositoryTest
         _fileSystemHelperMock.Setup(x => x.ReadAllText(It.IsAny<string>())).Returns(jsonData);
 
         // Act - Call multiple operations that use the cached data
-        var result1 = _repository.GetAllOrderedByRank().Result;
-        var result2 = _repository.GetAllOrderedByRank().Result;
+        var result1 = _repository.GetAll().Result;
+        var result2 = _repository.GetAll().Result;
         var result3 = _repository.GetById(1).Result;
 
         // Assert - File read operations should only happen once due to lazy loading

@@ -19,10 +19,9 @@ public class PlayerRepository:IPlayerRepository
     }
     
     
-    public async Task<List<Player>>GetAllOrderedByRank()
+    public async Task<List<Player>>GetAll()
     { 
-       
-       return _cachedPlayers.Value.OrderByDescending(player=>player.Data.Rank).ToList();
+       return _cachedPlayers.Value;
     } 
     public async Task<Player> GetById(int id)
     { 
