@@ -12,6 +12,7 @@ pool:
 
 variables:
   solution: '**/*.sln'
+  project:  '**/*Api.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 stages:
@@ -47,7 +48,7 @@ stages:
           displayName: 'Publish .NET Project'
           inputs:
             command: 'publish'
-            publishWebProjects: true
+            projects: '$(project)'
             arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
             zipAfterPublish: true
   - stage: Deploy
