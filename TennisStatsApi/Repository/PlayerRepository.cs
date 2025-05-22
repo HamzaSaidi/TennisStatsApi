@@ -1,4 +1,5 @@
 using System.Text.Json;
+using TennisStatsApi.Exception;
 using TennisStatsApi.Helpers;
 using TennisStatsApi.Models;
 
@@ -19,13 +20,22 @@ public class PlayerRepository:IPlayerRepository
     }
     
     
-    public async Task<List<Player>>GetAll()
+    public async Task<IQueryable<Player>> GetAll()
     { 
-       return _cachedPlayers.Value;
+       return _cachedPlayers.Value.AsQueryable();
     } 
     public async Task<Player> GetById(int id)
-    { 
-       return _cachedPlayers.Value.First(player => player.Id == id);
+    {
+       try
+       {
+          return _cachedPlayers.Value.First(player => player.Id == id);
+
+       }
+       catch (System.Exception e)
+       {
+           
+          throw new NotFoundException("Player Not found");
+       }
     } 
     private List<Player> LoadPlayers()
     { 
@@ -34,7 +44,8 @@ public class PlayerRepository:IPlayerRepository
        {
           var jsonData= _fileSystemHelper.ReadAllText(FilePath);
           return JsonSerializer.Deserialize<List<Player>>(jsonData) ?? new List<Player>();
-       } 
-       return new List<Player>(); 
+       }
+
+       throw new InvalidOperationException("Internal server error");
     }
 }

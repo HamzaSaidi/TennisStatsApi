@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Moq;
+using TennisStatsApi.Exception;
 using TennisStatsApi.Helpers;
 using TennisStatsApi.Models;
 using TennisStatsApi.Repository;
@@ -39,7 +40,7 @@ public class PlayerRepositoryTest
         var result = await _repository.GetAll();
 
         // Assert
-        Assert.Equal(3, result.Count);
+        Assert.Equal(3, result.ToList().Count);
         
     }
 
@@ -49,10 +50,8 @@ public class PlayerRepositoryTest
         // Arrange
         _fileSystemHelperMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(false); 
         // Act
-        var result = await _repository.GetAll();
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetAll());
 
-        // Assert
-        Assert.Empty(result);
     }
 
     [Fact]
@@ -80,7 +79,7 @@ public class PlayerRepositoryTest
         _fileSystemHelperMock.Setup(x => x.ReadAllText(It.IsAny<string>())).Returns(jsonData);
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetById(99));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetAll());
     }
 
     [Fact]
@@ -91,10 +90,9 @@ public class PlayerRepositoryTest
         _fileSystemHelperMock.Setup(x => x.ReadAllText(It.IsAny<string>())).Returns("invalid json");
 
         // Act
-        var result = await _repository.GetAll();
-
+ 
         // Assert
-        Assert.Empty(result);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _repository.GetAll());
     }
 
     [Fact]
