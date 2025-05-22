@@ -58,13 +58,6 @@ stages:
         displayName: 'deploy job'
         steps: 
 
-          - task: DownloadBuildArtifacts@1
-            inputs:
-              buildType: 'current'
-              downloadType: 'specific'
-              downloadPath: '$(System.ArtifactsDirectory)/publish'
-              
-          
           - task: AzureRmWebAppDeployment@5
             inputs:
               ConnectionType: 'AzureRM'
