@@ -43,12 +43,13 @@ stages:
               command: 'test'
               projects: '**/*Tests.csproj'  
               arguments: '--configuration Release --no-build'
-      
-        - task: PublishBuildArtifacts@1
+        - task: DotNetCoreCLI@2
+          displayName: 'Publish .NET Project'
           inputs:
-            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-            ArtifactName: 'drop'
-            publishLocation: 'Container'
+            command: 'publish'
+            publishWebProjects: true
+            arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/publish'
+            zipAfterPublish: true
   - stage: Deploy
     displayName: 'Deploy stage'
     jobs:
