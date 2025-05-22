@@ -35,18 +35,3 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-
-- task: DownloadBuildArtifacts@1
-  inputs:
-    buildType: 'current'
-    downloadType: 'specific'
-    downloadPath: '$(System.ArtifactsDirectory)'
-    
-
-- task: AzureRmWebAppDeployment@5
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription 1(359b6ed0-9a63-4401-8bb6-19c83cf226ca)'
-    appType: 'webApp'
-    WebAppName: 'TennisStatsApi'
-    packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
