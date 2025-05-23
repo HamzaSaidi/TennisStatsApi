@@ -15,7 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IFileSystemHelper, FileSystemHelper>();
 builder.Services.AddSingleton<IPlayerRepository, PlayerRepository>(); 
 builder.Services.AddSingleton<IPlayerService, PlayerService>(); 
- 
+builder.Services.AddSingleton<IStatsService, StatsService>(); 
+  
 var app = builder.Build(); 
 // Configure the HTTP request pipeline.
 
