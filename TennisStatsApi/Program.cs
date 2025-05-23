@@ -24,6 +24,16 @@ var app = builder.Build();
     app.UseSwaggerUI(); 
 
 app.UseHttpsRedirection();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger");
+        return;
+    }
+
+    await next();
+});
 
 app.UseAuthorization();
 app.UseMiddleware<GlobalExceptionHandler>();
