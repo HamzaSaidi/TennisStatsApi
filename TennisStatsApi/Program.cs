@@ -1,4 +1,6 @@
+ 
 using TennisStatsApi.Helpers;
+using TennisStatsApi.Middlewares;
 using TennisStatsApi.Repository;
 using TennisStatsApi.Services;
 
@@ -13,16 +15,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IFileSystemHelper, FileSystemHelper>();
 builder.Services.AddSingleton<IPlayerRepository, PlayerRepository>(); 
 builder.Services.AddSingleton<IPlayerService, PlayerService>(); 
+ 
 var app = builder.Build(); 
 // Configure the HTTP request pipeline.
 
     app.UseSwagger();
-    app.UseSwaggerUI();
- 
+    app.UseSwaggerUI(); 
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<GlobalExceptionHandler>();
 
 app.MapControllers();
 

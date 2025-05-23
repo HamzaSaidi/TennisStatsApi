@@ -4,11 +4,11 @@ using TennisStatsApi.Services;
 namespace TennisStatsApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class PlayerController : ControllerBase
+public class PlayersController : ControllerBase
 {
     private readonly IPlayerService _playerService;
 
-    public PlayerController(IPlayerService playerService)
+    public PlayersController(IPlayerService playerService)
     {
         _playerService = playerService;
     }

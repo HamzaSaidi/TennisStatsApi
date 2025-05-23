@@ -7,15 +7,15 @@ using TennisStatsApi.Services;
 
 namespace TennisStatsApiTests.Controllers;
 
-public class PlayerControllerTests
+public class PlayersControllerTests
 {
     private readonly Mock<IPlayerService> _mockService;
-    private readonly PlayerController _controller;
+    private readonly PlayersController _controller;
 
-    public PlayerControllerTests()
+    public PlayersControllerTests()
     {
         _mockService = new Mock<IPlayerService>();
-        _controller = new PlayerController(_mockService.Object);
+        _controller = new PlayersController(_mockService.Object);
     }
 
     [Fact]
